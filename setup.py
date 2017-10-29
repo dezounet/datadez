@@ -15,6 +15,7 @@ setup(
         "datadez",
     ],
     url="https://github.com/dezounet/datadez",
+    download_url='https://github.com/dezounet/datadez/archive/0.1.tar.gz',
     install_requires=[
         "numpy>=1.13.3",
         "pandas>=0.21.0",
