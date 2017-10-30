@@ -22,8 +22,8 @@ if __name__ == "__main__":
     pprint.pprint(df_summaries)
 
     print("\nFiltering the small occurrences label of columns B and C...")
-    df['B'] = filter_small_occurrence(df['B'], 3)
-    df['C'] = filter_small_occurrence(df['C'], 6)
+    df = filter_small_occurrence(df, 'B', 3)
+    df = filter_small_occurrence(df, 'C', 6)
 
     print("We now get this (len=%s):" % len(df))
     print(df.head(), "\n")

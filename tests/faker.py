@@ -1,5 +1,7 @@
 from __future__ import unicode_literals, print_function
 
+from builtins import range
+
 import random
 import string
 
@@ -8,10 +10,10 @@ import pandas as pd
 
 
 def _id_generator(size=6, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in xrange(size))
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
-_RANDOM_LABELS = [_id_generator() for _ in xrange(30)]
+_RANDOM_LABELS = [_id_generator() for _ in range(30)]
 
 _RANDOM_NOUNS = ("puppy", "car", "rabbit", "girl", "boy", "house", "monkey", "donkey")
 _RANDOMS_VERBS = ("runs", "hits", "jumps", "drives", "barfs", "eats", "swims", "weeps")
@@ -28,12 +30,12 @@ def get_random_dataframe(size):
     df = pd.DataFrame(np.random.randn(size, 4), columns=list('ABCD'))
 
     # Label column
-    df['B'] = [random.choice(_RANDOM_LABELS) for _ in xrange(len(df))]
+    df['B'] = [random.choice(_RANDOM_LABELS) for _ in range(len(df))]
 
     # Label list column
-    df['C'] = [[random.choice(_RANDOM_LABELS) for __ in xrange(random.randint(0, 4))] for _ in xrange(len(df))]
+    df['C'] = [[random.choice(_RANDOM_LABELS) for __ in range(random.randint(0, 4))] for _ in range(len(df))]
 
     # Text column
-    df['D'] = [_get_random_sentence() for _ in xrange(len(df))]
+    df['D'] = [_get_random_sentence() for _ in range(len(df))]
 
     return df

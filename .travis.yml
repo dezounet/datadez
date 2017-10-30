@@ -1,8 +1,11 @@
 language: python
 python:
   - "2.7"
+  - "3.6"
 # command to install dependencies
 install:
   - pip install -r requirements.txt
 # command to run tests
-script: python -m tests.sample
+script:
+  - python -m tests.sample
+  - python -m tests.test_filter

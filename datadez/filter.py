@@ -10,41 +10,41 @@ from datadez.columns import get_mono_label_occurrence
 from datadez.columns import get_multi_label_occurrence
 
 
-def _filter_mono_label_small_occurrence(column, min_occurrence):
-    occurrences = get_mono_label_occurrence(column)
+def _filter_mono_label_small_occurrence(dataset, column_name, min_occurrence):
+    occurrences = get_mono_label_occurrence(dataset[column_name])
     labels_to_delete = occurrences[occurrences < min_occurrence].keys()
 
-    mask = column.isin(labels_to_delete)
+    mask = dataset[column_name].isin(labels_to_delete)
 
     # Should check why, with no deepcopy, pandas is throwing a warning...
-    filtered_column = deepcopy(column)
+    filtered_column = deepcopy(dataset[column_name])
     filtered_column.loc[mask] = np.nan
+    dataset[column_name] = filtered_column
 
-    return filtered_column
+    return dataset
 
 
-def _filter_multi_label_small_occurrence(column, min_occurrence):
-    occurrences, _ = get_multi_label_occurrence(column)
+def _filter_multi_label_small_occurrence(dataset, column_name, min_occurrence):
+    occurrences, _ = get_multi_label_occurrence(dataset[column_name])
     labels_to_delete = occurrences[occurrences < min_occurrence].keys()
 
-    for labels in column:
+    for labels in dataset[column_name]:
         labels[:] = [label for label in labels if label not in labels_to_delete]
 
-    filtered_column = column
-    return filtered_column
+    return dataset
 
 
-def filter_small_occurrence(column, min_occurrence):
-    column_type = detect_column_type(column)
+def filter_small_occurrence(dataset, column_name, min_occurrence):
+    column_type = detect_column_type(dataset[column_name])
 
     if column_type == MONO_LABEL_TYPE:
-        filtered_column = _filter_mono_label_small_occurrence(column, min_occurrence)
+        dataset = _filter_mono_label_small_occurrence(dataset, column_name, min_occurrence)
     elif column_type == MULTI_LABEL_TYPE:
-        filtered_column = _filter_multi_label_small_occurrence(column, min_occurrence)
+        dataset = _filter_multi_label_small_occurrence(dataset, column_name, min_occurrence)
     else:
         raise NotImplementedError
 
-    return filtered_column
+    return dataset
 
 
 def _drop_nan(dataset, column_name):

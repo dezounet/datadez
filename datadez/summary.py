@@ -1,5 +1,8 @@
 from __future__ import unicode_literals, print_function
 
+# Python 2 and 3 compatibility
+from builtins import dict
+
 import numpy as np
 
 from datadez.columns import MONO_LABEL_TYPE
@@ -22,7 +25,7 @@ def numeric_summary(column):
 
 def mono_label_summary(column):
     label_occurrences = get_mono_label_occurrence(column).to_dict()
-    occurrences = label_occurrences.values()
+    occurrences = [v for v in label_occurrences.values()]
     max_count = max(occurrences)
     min_count = min(occurrences)
     mean_count = np.mean(occurrences)
@@ -41,8 +44,7 @@ def mono_label_summary(column):
 
 def multi_label_summary(column):
     occurrences, cardinalities = get_multi_label_occurrence(column)
-
-    occurrences = occurrences.to_dict().values()
+    occurrences = [v for v in occurrences.to_dict().values()]
     max_count = max(occurrences)
     min_count = min(occurrences)
     mean_count = np.mean(occurrences)
