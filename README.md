@@ -38,93 +38,105 @@ pprint.pprint(df_summaries)
 
 Just clone this repository, and execute:
 
-    python -m tests.main
+    python -m tests.sample
     
 This will execute a test sample, for you to get what's going on:
 
     Starting from this dataframe (len=100):
-              A       B                         C                                  D
-    0 -1.586145  6MDH0R          [G82DAB, LUK187]       puppy weeps adorable crazily
-    1  1.615922  FZPGMF  [53N7FZ, 4PUXVZ, T13QZ8]          donkey hits dirty crazily
-    2  0.415307  U63ZTQ                        []        house hits odd occasionally
-    3  1.127916  D2LDB2                  [D2LDB2]  rabbit drives stupid occasionally
-    4 -0.235374  1ESVPW          [JA6MD0, T13QZ8]         donkey swims odd dutifully
+              A       B                                 C                               D
+    0  0.745236  BBM7UP  [TUT7RS, MOW92W, 9O6IX6, T70X4Z]    donkey barfs dirty foolishly
+    1  0.484822  GPC8CL  [BG05XJ, IORYVC, BX9UK5, ERT4PJ]    girl hits clueless dutifully
+    2  0.673377  BK3OE7  [GPC8CL, GPC8CL, GPC8CL, BG05XJ]  car eats clueless occasionally
+    3  0.462564  AEAIH6                                []          car eats dirty crazily
+    4 -0.115847  T70X4Z                                []      girl hits adorable crazily
     
     With these metrics:
     {u'A': {u'column_type': u'numeric',
-            u'mean': 0.03523764999327153,
-            u'std': 0.87669461972996077},
+            u'mean': 0.048246178299744653,
+            u'std': 0.95162789611877563},
      u'B': {u'column_type': u'mono-label',
             u'imbalance_ratio': 6,
-            u'labels': 29,
-            u'occurrence_max': 6,
-            u'occurrence_mean': 3.4482758620689653,
-            u'occurrence_min': 1,
-            u'occurrence_std_dev': 1.5444272880385306},
-     u'C': {u'cardinality_mean': 2.04,
-            u'cardinality_std_dev': 1.2955307792561319,
-            u'column_type': u'multi-label',
-            u'imbalance_ratio': 4,
             u'labels': 30,
-            u'occurrence_max': 12,
-            u'occurrence_mean': 6.7999999999999998,
-            u'occurrence_min': 3,
-            u'occurrence_std_dev': 2.5086516962969037},
+            u'occurrence_max': 6,
+            u'occurrence_mean': 3.3333333333333335,
+            u'occurrence_min': 1,
+            u'occurrence_std_dev': 1.4452988925785868},
+     u'C': {u'cardinality_mean': 1.6499999999999999,
+            u'cardinality_std_dev': 1.3955285736952863,
+            u'column_type': u'multi-label',
+            u'imbalance_ratio': 5,
+            u'labels': 29,
+            u'occurrence_max': 10,
+            u'occurrence_mean': 5.6896551724137927,
+            u'occurrence_min': 2,
+            u'occurrence_std_dev': 2.1189367580327199,
+            u'partitions': {u'imbalance_ratio': 29,
+                            u'labels': 65,
+                            u'occurrence_max': 29,
+                            u'occurrence_mean': 1.5384615384615385,
+                            u'occurrence_min': 1,
+                            u'occurrence_std_dev': 3.4555503761871074}},
      u'D': {u'column_type': u'mono-label',
             u'imbalance_ratio': 2,
-            u'labels': 94,
+            u'labels': 98,
             u'occurrence_max': 2,
-            u'occurrence_mean': 1.0638297872340425,
+            u'occurrence_mean': 1.0204081632653061,
             u'occurrence_min': 1,
-            u'occurrence_std_dev': 0.24444947432076719}}
+            u'occurrence_std_dev': 0.14139190265868387}}
     
     Filtering the small occurrences label of columns B and C...
     We now get this (len=100):
-              A       B                 C                                  D
-    0 -1.586145  6MDH0R  [G82DAB, LUK187]       puppy weeps adorable crazily
-    1  1.615922     NaN  [4PUXVZ, T13QZ8]          donkey hits dirty crazily
-    2  0.415307  U63ZTQ                []        house hits odd occasionally
-    3  1.127916  D2LDB2          [D2LDB2]  rabbit drives stupid occasionally
-    4 -0.235374  1ESVPW  [JA6MD0, T13QZ8]         donkey swims odd dutifully
+              A       B                                 C                               D
+    0  0.745236  BBM7UP                  [MOW92W, 9O6IX6]    donkey barfs dirty foolishly
+    1  0.484822  GPC8CL          [BG05XJ, IORYVC, ERT4PJ]    girl hits clueless dutifully
+    2  0.673377  BK3OE7  [GPC8CL, GPC8CL, GPC8CL, BG05XJ]  car eats clueless occasionally
+    3  0.462564  AEAIH6                                []          car eats dirty crazily
+    4 -0.115847  T70X4Z                                []      girl hits adorable crazily
     
     
     Filtering empty entry example for column B or C...
     
-    We finally have a clean dataframe (len=71):
-              A       B                         C                                  D
-    0 -1.586145  6MDH0R          [G82DAB, LUK187]       puppy weeps adorable crazily
-    3  1.127916  D2LDB2                  [D2LDB2]  rabbit drives stupid occasionally
-    4 -0.235374  1ESVPW          [JA6MD0, T13QZ8]         donkey swims odd dutifully
-    6 -0.372390  XF2L23  [D2LDB2, 471R31, U63ZTQ]         puppy barfs stupid crazily
-    9  0.064844  471R31                  [89LMS2]   rabbit drives clueless foolishly
+    We finally have a clean dataframe (len=47):
+              A       B                                 C                               D
+    0  0.745236  BBM7UP                  [MOW92W, 9O6IX6]    donkey barfs dirty foolishly
+    1  0.484822  GPC8CL          [BG05XJ, IORYVC, ERT4PJ]    girl hits clueless dutifully
+    2  0.673377  BK3OE7  [GPC8CL, GPC8CL, GPC8CL, BG05XJ]  car eats clueless occasionally
+    5 -0.941320  7A37D6                          [76AYX1]    girl eats clueless dutifully
+    6  0.043402  7A37D6                          [BK3OE7]     rabbit jumps stupid merrily
     
     With these metrics:
     {u'A': {u'column_type': u'numeric',
-            u'mean': -0.08669925159868834,
-            u'std': 0.88961458709106267},
+            u'mean': 0.14122463494338683,
+            u'std': 0.9745937014876852},
      u'B': {u'column_type': u'mono-label',
-            u'imbalance_ratio': 2,
+            u'imbalance_ratio': 5,
             u'labels': 20,
             u'occurrence_max': 5,
-            u'occurrence_mean': 3.5499999999999998,
-            u'occurrence_min': 2,
-            u'occurrence_std_dev': 1.0712142642814275},
-     u'C': {u'cardinality_mean': 1.971830985915493,
-            u'cardinality_std_dev': 0.93404814825854943,
-            u'column_type': u'multi-label',
-            u'imbalance_ratio': 2,
-            u'labels': 19,
-            u'occurrence_max': 12,
-            u'occurrence_mean': 7.3684210526315788,
-            u'occurrence_min': 5,
-            u'occurrence_std_dev': 2.005532514027121},
-     u'D': {u'column_type': u'mono-label',
-            u'imbalance_ratio': 2,
-            u'labels': 69,
-            u'occurrence_max': 2,
-            u'occurrence_mean': 1.0289855072463767,
+            u'occurrence_mean': 2.3500000000000001,
             u'occurrence_min': 1,
-            u'occurrence_std_dev': 0.16776575221435114}}
+            u'occurrence_std_dev': 1.0618380290797651},
+     u'C': {u'cardinality_mean': 1.7872340425531914,
+            u'cardinality_std_dev': 0.84893350396851086,
+            u'column_type': u'multi-label',
+            u'imbalance_ratio': 3,
+            u'labels': 15,
+            u'occurrence_max': 9,
+            u'occurrence_mean': 5.5999999999999996,
+            u'occurrence_min': 3,
+            u'occurrence_std_dev': 1.5405626677721789,
+            u'partitions': {u'imbalance_ratio': 4,
+                            u'labels': 36,
+                            u'occurrence_max': 4,
+                            u'occurrence_mean': 1.3055555555555556,
+                            u'occurrence_min': 1,
+                            u'occurrence_std_dev': 0.69997795379745287}},
+     u'D': {u'column_type': u'mono-label',
+            u'imbalance_ratio': 1,
+            u'labels': 47,
+            u'occurrence_max': 1,
+            u'occurrence_mean': 1.0,
+            u'occurrence_min': 1,
+            u'occurrence_std_dev': 0.0}}
 
 [travis-badge]:    https://travis-ci.org/dezounet/datadez.svg?branch=master
 [travis-link]:     https://travis-ci.org/dezounet/datadez

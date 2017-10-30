@@ -53,6 +53,11 @@ def multi_label_summary(column):
     mean_cardinality = np.mean(cardinalities)
     std_cardinality = np.std(cardinalities)
 
+    # Get some stats on label grouping, considering the column
+    # as a mono-label column
+    subset_summary = mono_label_summary(column.astype(str))
+    del (subset_summary['column_type'])
+
     return {
         'column_type': MULTI_LABEL_TYPE,
         'labels': len(occurrences),
@@ -63,4 +68,5 @@ def multi_label_summary(column):
         'imbalance_ratio': max_count / min_count,
         'cardinality_mean': mean_cardinality,
         'cardinality_std_dev': std_cardinality,
+        'partitions': subset_summary
     }
