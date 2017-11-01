@@ -20,5 +20,8 @@ setup(
         "numpy>=1.13.3",
         "pandas>=0.21.0",
         "future",
+        "nltk",
+        "sklearn",
+        "scipy",
     ],
 )

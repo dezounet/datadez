@@ -11,6 +11,7 @@ import pandas as pd
 NUMERIC_TYPE = 'numeric'
 MONO_LABEL_TYPE = 'mono-label'
 MULTI_LABEL_TYPE = 'multi-label'
+TEXT_TYPE = 'text'
 
 
 def get_mono_label_occurrence(column):
@@ -39,7 +40,9 @@ def detect_column_type(column):
     while column_type is None and current_entry < len(column):
         entry = column.iloc[current_entry]
 
-        if isinstance(entry, basestring):
+        if isinstance(entry, basestring) and " " in entry:
+            column_type = TEXT_TYPE
+        elif isinstance(entry, basestring):
             column_type = MONO_LABEL_TYPE
         elif isinstance(entry, (list, set, tuple)):
             column_type = MULTI_LABEL_TYPE
