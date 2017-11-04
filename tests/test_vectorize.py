@@ -7,7 +7,7 @@ import pandas as pd
 from datadez.transform import vectorize_dataset
 
 
-class TestFilter(unittest.TestCase):
+class TestVectorize(unittest.TestCase):
     def setUp(self):
         self.df = pd.DataFrame({
             'text': ["aa bb", "aa", "bb cc", "cc", ""],

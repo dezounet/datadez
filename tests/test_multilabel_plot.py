@@ -13,7 +13,7 @@ from tests import file_path
 from tests.faker import get_random_dataframe
 
 
-class TestFilter(unittest.TestCase):
+class TestMultilabelPlot(unittest.TestCase):
     def setUp(self):
         self.df = pd.DataFrame({
             'numeric': [1, 2, 3, 4, 5],
@@ -25,7 +25,8 @@ class TestFilter(unittest.TestCase):
         df = get_random_dataframe(300)
         figure = multilabel_plot.intersection_matrix(df, 'C')
 
-        plot(figure, filename=file_path('chord-diagram.html'))
+        # Uncomment to plot figure
+        # plot(figure, filename=file_path('chord-diagram.html'))
 
 
 if __name__ == "__main__":

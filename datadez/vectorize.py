@@ -19,7 +19,7 @@ def _vectorize(vectorizer, series):
     try:
         vector = vector.todense()
         vector = list(np.squeeze(vector))
-        vector = map(lambda x: np.array(x)[0], vector)
+        vector = list(map(lambda x: np.array(x)[0], vector))
     except AttributeError:
         pass
 

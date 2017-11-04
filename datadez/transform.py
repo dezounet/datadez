@@ -1,5 +1,8 @@
 from __future__ import unicode_literals, print_function
 
+# Python 2 and 3 compatibility
+from builtins import dict
+
 import nltk
 
 import pandas as pd
@@ -60,8 +63,10 @@ def vectorize_dataset(dataset):
 
     # Put everything back together
     output_dataset = None
-    for column, vectorized_columns in series.iteritems():
+    for column in series.keys():
+        vectorized_columns = series[column]
         vectorizer = vectorizers[column]
+
         if vectorizer is not None:
             sub_index = vectorized_columns.columns
         else:
@@ -76,21 +81,3 @@ def vectorize_dataset(dataset):
             output_dataset = vectorized_columns
 
     return output_dataset, vectorizers
-
-
-if __name__ == "__main__":
-    import pandas as pd
-
-    from tests.faker import get_random_dataframe
-
-    # Get nice output
-    pd.set_option('display.width', 250)
-
-    df = get_random_dataframe(100)
-    print("Original dataset:")
-    print(df.head())
-
-    df, vectorizers = vectorize_dataset(df)
-
-    print("Vectorized dataset:")
-    print(df.head())

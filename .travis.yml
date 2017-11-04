@@ -9,3 +9,5 @@ install:
 script:
   - python -m tests.sample
   - python -m tests.test_filter
+  - python -m tests.test_multilabel_plot
+  - python -m tests.test_vectorize
