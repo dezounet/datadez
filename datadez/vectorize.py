@@ -6,6 +6,37 @@ import numpy as np
 import pandas as pd
 
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import MultiLabelBinarizer
+
+
+def _vectorize(vectorizer, series):
+    vectorizer.fit(series)
+
+    # Vectorize the input
+    vector = vectorizer.transform(series)
+
+    try:
+        vector = vector.todense()
+        vector = list(np.squeeze(vector))
+        vector = map(lambda x: np.array(x)[0], vector)
+    except AttributeError:
+        pass
+
+    # Get vocabulary, ordered by id
+    if hasattr(vectorizer, 'vocabulary_'):
+        vocabulary = sorted(vectorizer.vocabulary_.items(), key=operator.itemgetter(1))
+        vocabulary = [word[0] for word in vocabulary]
+    elif hasattr(vectorizer, 'classes_'):
+        vocabulary = vectorizer.classes_
+    else:
+        raise ValueError("Wrong type of vectorizer given! Excepting one with attribute 'vocabulary_' or 'classes_'")
+
+    # Encapsulate new columns inside a meta column, and put each word to its own column
+    new_columns = pd.DataFrame(vector)
+    new_columns.columns = pd.Series(vocabulary)
+
+    return new_columns
 
 
 def vectorize_text(series, min_df=1, max_df=1.0, binary=False):
@@ -22,23 +53,10 @@ def vectorize_text(series, min_df=1, max_df=1.0, binary=False):
 
     :return: vectorized series as a dataframe, vectorizer
     """
-    # Fit the vectorizer
     vectorizer = CountVectorizer(min_df=min_df, max_df=max_df, binary=binary)
-    vectorizer.fit(series)
+    dataframe = _vectorize(vectorizer, series)
 
-    # Vectorize the text
-    vector = list(np.squeeze(vectorizer.transform(series).todense()))
-    vector = map(lambda x: np.array(x)[0], vector)
-
-    # Get vocabulary, ordered by id
-    vocabulary = sorted(vectorizer.vocabulary_.items(), key=operator.itemgetter(1))
-    vocabulary = [word[0] for word in vocabulary]
-
-    # Encapsulate new columns inside a meta column, and put each word to its own column
-    new_columns = pd.DataFrame(vector)
-    new_columns.columns = vocabulary
-
-    return new_columns, vectorizer
+    return dataframe, vectorizer
 
 
 def vectorize_mono_label(series):
@@ -48,9 +66,10 @@ def vectorize_mono_label(series):
     :param series: series to vectorize
     :return: vectorized series as a dataframe, vectorizer
     """
-    new_columns, vectorizer = vectorize_text(series, min_df=1, max_df=1.0, binary=True)
+    vectorizer = LabelBinarizer()
+    dataframe = _vectorize(vectorizer, series)
 
-    return new_columns, vectorizer
+    return dataframe, vectorizer
 
 
 def vectorize_multi_label(series):
@@ -60,7 +79,7 @@ def vectorize_multi_label(series):
     :param series: series to vectorize
     :return: vectorized series as a dataframe, vectorizer
     """
-    series = series.apply(lambda x: " ".join(x))
-    new_columns, vectorizer = vectorize_text(series, min_df=1, max_df=1.0, binary=True)
+    vectorizer = MultiLabelBinarizer()
+    dataframe = _vectorize(vectorizer, series)
 
-    return new_columns, vectorizer
+    return dataframe, vectorizer

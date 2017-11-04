@@ -2,6 +2,8 @@ from __future__ import unicode_literals, print_function
 
 import nltk
 
+import pandas as pd
+
 from datadez.columns import detect_column_type
 from datadez.columns import NUMERIC_TYPE, MONO_LABEL_TYPE, MULTI_LABEL_TYPE, TEXT_TYPE
 
@@ -45,7 +47,6 @@ def vectorize_dataset(dataset):
     # Vectorize on column at a time
     for column in dataset.columns:
         column_type = detect_column_type(dataset[column])
-        print("vectorizing column %s as a %s column" % (column, column_type))
 
         vectorizer_fn = COLUMN_VECTORIZER[column_type]
         if vectorizer_fn is not None:
