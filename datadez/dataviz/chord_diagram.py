@@ -2,28 +2,17 @@
 
 from __future__ import unicode_literals, print_function
 
-import os
-
 import numpy as np
 
-from plotly.offline import plot
 from plotly.graph_objs import *
 
 from datadez.dataviz.color import polylinear_gradient
-
-TMP_DIR = os.path.join(os.path.dirname(__file__), 'tmp')
-if not os.path.exists(TMP_DIR):
-    os.makedirs(TMP_DIR)
 
 # Constants
 PI = np.pi
 GAP = 2 * PI * 0.005
 
 COLOR_SCHEME = ["#64B5F6", "#E57373", "#AED581", "#FFB74D", "#90A4AE"]
-
-
-def file_path(file_name):
-    return os.path.join(TMP_DIR, file_name)
 
 
 def check_data(data_matrix):
@@ -242,7 +231,7 @@ def _plot_ideogram(layout, row_sum, labels, colors, ideo_ends):
                                  y=z.imag,
                                  mode='lines',
                                  line=Line(color=colors[k], shape='spline', width=0.25),
-                                 text=labels[k] + '<br>' + '{:d}'.format(row_sum[k]),
+                                 text='label: ' + labels[k] + '<br>' + 'occurrence: {:d}'.format(row_sum[k]),
                                  hoverinfo='text'
                                  )
                          )
@@ -293,7 +282,7 @@ def _plot_ribbon(layout, row_sum, labels, colors, ideogram_length, ideo_ends, ma
                                                       radius=radii_sribb[k % len(radii_sribb)]))
                 z = 0.9 * np.exp(1j * (l[0] + l[1]) / 2)
                 # the text below will be displayed when hovering the mouse over the ribbon
-                text = '%s appeared in %s samples' % (labels[k], matrix[k][k]),
+                text = 'label %s appeared in %s samples' % (labels[k], matrix[k][k]),
                 ribbon_info.append(Scatter(x=[z.real],
                                            y=[z.imag],
                                            mode='markers',
@@ -338,7 +327,7 @@ def _plot_ribbon(layout, row_sum, labels, colors, ideogram_length, ideo_ends, ma
     return ribbon_info
 
 
-def plot_chord_diagram(matrix, labels):
+def chord_diagram(matrix, labels):
     label_count = check_data(matrix)
 
     # Useful vars
@@ -356,5 +345,6 @@ def plot_chord_diagram(matrix, labels):
     ribbon_info = _plot_ribbon(layout, row_sum, labels, ideo_colors, ideogram_length, ideo_ends, matrix)
 
     data = Data(ribbon_info + ideograms)
-    fig = Figure(data=data, layout=layout)
-    plot(fig, filename=file_path('chord-diagram.html'))
+    figure = Figure(data=data, layout=layout)
+
+    return figure

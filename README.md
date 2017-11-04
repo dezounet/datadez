@@ -15,6 +15,10 @@ The main goal of this package is to make your life easier if you want to:
 
 ### Usage
 
+1. Command line inspection
+
+You can gain insight into your dataset, getting, among other things, label count, max/min/mean label occurrences (for mono and multi label columns).
+
 ```python
 # Dataframe with numeric, mono-label, or multi-label (list, tuple, set) columns
 df = pd.DataFrame(...)
@@ -33,6 +37,26 @@ from datadez.summarize import summarize
 df_summaries = summarize(df)
 pprint.pprint(df_summaries)
 ```
+
+2. Visual inspection
+
+```python
+# Dataframe with a multi-label column 'C'
+df = pd.DataFrame(...)
+
+# Compute a plotly figure from this dataframe
+from datadez.dataviz import multilabel_plot
+figure = multilabel_plot.intersection_matrix(df, 'C')
+
+# Plot the figure in a file. You can also do this inside a Jupyter notebook
+from plotly.offline import plot
+plot(figure, filename='chord-diagram.html')
+```
+
+Output will look like this:
+
+![intersection_matrix.jpg](./docs/intersection_matrix.jpg)
+
 
 ### Do some tests
 
