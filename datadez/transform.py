@@ -1,15 +1,25 @@
 from __future__ import unicode_literals, print_function
 
-import numpy as np
-
 import nltk
 
-from sklearn.feature_extraction.text import CountVectorizer
+from datadez.columns import detect_column_type
+from datadez.columns import NUMERIC_TYPE, MONO_LABEL_TYPE, MULTI_LABEL_TYPE, TEXT_TYPE
+
+from datadez.vectorize import vectorize_text
+from datadez.vectorize import vectorize_mono_label
+from datadez.vectorize import vectorize_multi_label
+
+COLUMN_VECTORIZER = {
+    NUMERIC_TYPE: None,
+    MONO_LABEL_TYPE: vectorize_mono_label,
+    MULTI_LABEL_TYPE: vectorize_multi_label,
+    TEXT_TYPE: vectorize_text
+}
 
 
 def tokenize(dataset, column):
     """
-    Text column to list of words column.
+    Text column to list of words column (multi-label like).
 
     :param dataset: dataset where data are stored
     :param column: which column should be tokenized
@@ -21,50 +31,50 @@ def tokenize(dataset, column):
     return dataset
 
 
-def vectorize_text(dataset, column, min_df=1, max_df=1.0, binary=False):
+def vectorize_dataset(dataset):
     """
-    Vectorize a column, put it back to the dataframe.
+    Fully vectorize a dataset (text, mono-label and multi-label columns).
 
-    :param dataset: dataset where data are stored
-    :param column: which column should be vectorized
-    :param min_df: float in range [0.0, 1.0] or int, default=1
-    :param max_df: float in range [0.0, 1.0] or int, default=1.0
-    :param binary: If True, all non zero counts are set to 1, else to count.
+    :param dataset: dataset to vectorize
 
-    :return: modified dataset
+    :return: vectorized dataset, vectorizers
     """
-    vectorizer = CountVectorizer(min_df=min_df, max_df=max_df, binary=binary)
-    vectorizer.fit(dataset[column])
+    series = {}
+    vectorizers = {}
 
-    dataset[column] = list(np.squeeze(vectorizer.transform(dataset[column]).todense()))
-    dataset[column] = dataset[column].apply(lambda x: np.array(x)[0])
+    # Vectorize on column at a time
+    for column in dataset.columns:
+        column_type = detect_column_type(dataset[column])
+        print("vectorizing column %s as a %s column" % (column, column_type))
 
-    # Encapsulate new columns inside a meta column
-    new_columns = pd.DataFrame(dataset[column].tolist())
-    new_columns.columns = pd.MultiIndex.from_product([[column], new_columns.columns])
+        vectorizer_fn = COLUMN_VECTORIZER[column_type]
+        if vectorizer_fn is not None:
+            vectorized_columns, vectorizer = vectorizer_fn(dataset[column])
 
-    # TODO: instead of index, column name should be word
+            series[column] = vectorized_columns
+            vectorizers[column] = vectorizer
+        else:
+            series[column] = dataset[column].to_frame()
+            vectorizers[column] = None
 
-    # Remove old column
-    del dataset[column]
+    # Put everything back together
+    output_dataset = None
+    for column, vectorized_columns in series.iteritems():
+        vectorizer = vectorizers[column]
+        if vectorizer is not None:
+            sub_index = vectorized_columns.columns
+        else:
+            sub_index = ["value"]
 
-    # Adapt original level
-    dataset.columns = pd.MultiIndex.from_product([dataset.columns, ['dummy']])
+        # Add one level of index
+        vectorized_columns.columns = pd.MultiIndex.from_product([[column], sub_index])
 
-    # Append new columns to the original dataframe
-    dataset = dataset.join(new_columns)
+        if output_dataset is not None:
+            output_dataset = output_dataset.join(vectorized_columns)
+        else:
+            output_dataset = vectorized_columns
 
-    return dataset, vectorizer
-
-
-def text_to_multi_label(dataset, column):
-    # TODO
-    return dataset
-
-
-def multi_label_to_one_hot(dataset, column):
-    # TODO
-    return dataset
+    return output_dataset, vectorizers
 
 
 if __name__ == "__main__":
@@ -76,10 +86,10 @@ if __name__ == "__main__":
     pd.set_option('display.width', 250)
 
     df = get_random_dataframe(100)
-    print("Original dataframe:")
+    print("Original dataset:")
     print(df.head())
 
-    df, vectorizer = vectorize_text(df, 'D')
+    df, vectorizers = vectorize_dataset(df)
 
-    print("Vectorized dataframe with a new level:")
+    print("Vectorized dataset:")
     print(df.head())
