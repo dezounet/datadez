@@ -57,6 +57,45 @@ Output will look like this:
 
 ![intersection_matrix.jpg](./docs/intersection_matrix.jpg)
 
+3. Transformation
+
+With this code snippet:
+
+```python
+# Dataframe with numeric, text, mono-label, multi-label (list, tuple, set) columns
+df = pd.DataFrame(...)
+
+print("Original dataset:")
+print(df.head())
+
+# Vectorize text, mono-label and multi-label columns
+from datadez.transform import vectorize_dataset
+df, vectorizers = vectorize_dataset(df)
+
+print("Vectorized dataset:")
+print(df.head())
+```
+
+One will get:
+
+    Original dataset:
+              A       B                                 C                                D
+    0 -0.585248  W2SIF2                                []     house jumps adorable crazily
+    1  0.569125  RYKAXC  [IRX7HF, AXQU0L, PM1E1Q, 1FCWZQ]            car swims odd merrily
+    2 -0.076040  7UVFIJ  [60WILH, NT28YD, 8IYE5F, 7UVFIJ]  monkey barfs clueless dutifully
+    3 -0.098878  U9WN5M                  [KS5EXD, YGTPR9]           boy runs odd dutifully
+    4  0.952773  SK1Z1M                          [AXQU0L]            boy barfs odd crazily
+    
+    Vectorized dataset:
+              A      C                                                          ...        D
+          value 1BNK1S 1FCWZQ 246K1M 3A48BH 60WILH 6C3VOQ 6LGS3T 7UVFIJ 8IYE5F  ...  merrily monkey occasionally odd puppy rabbit runs stupid swims weeps
+    0 -0.585248      0      0      0      0      0      0      0      0      0  ...        0      0            0   0     0      0    0      0     0     0
+    1  0.569125      0      1      0      0      0      0      0      0      0  ...        1      0            0   1     0      0    0      0     1     0
+    2 -0.076040      0      0      0      0      1      0      0      1      1  ...        0      1            0   0     0      0    0      0     0     0
+    3 -0.098878      0      0      0      0      0      0      0      0      0  ...        0      0            0   1     0      0    1      0     0     0
+    4  0.952773      0      0      0      0      0      0      0      0      0  ...        0      0            0   1     0      0    0      0     0     0
+    
+    [5 rows x 85 columns]
 
 ### Do some tests
 
