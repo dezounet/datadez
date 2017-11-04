@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="datadez",
-    version="0.1.0",
+    version="0.1.dev",
     description="Inspect, filter and balance your dataset",
     keywords=["dataset", "inspect", "filter", "balance"],
     author="dezounet",
@@ -20,5 +20,8 @@ setup(
         "numpy>=1.13.3",
         "pandas>=0.21.0",
         "future",
+        "nltk",
+        "sklearn",
+        "scipy",
     ],
 )
