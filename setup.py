@@ -13,6 +13,7 @@ setup(
     license="MIT",
     packages=[
         "datadez",
+        "datadez.dataviz"
     ],
     url="https://github.com/dezounet/datadez",
     download_url='https://github.com/dezounet/datadez/archive/0.1.tar.gz',
